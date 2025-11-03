@@ -9,6 +9,7 @@ import MenuSection from "./MenuSection";
 import ImageSection from "./ImageSection";
 import LoadingButton from "@/components/LoadingButton";
 import { Button } from "@/components/ui/button";
+import type { Restaurant } from "@/types";
 
 const RestaurantSchema = z.object({
     restaurantName: z.string().nonempty({message: "restaurant name is required"}),
@@ -37,11 +38,12 @@ const RestaurantSchema = z.object({
 type RestaurantFormData = z.infer<typeof RestaurantSchema>;
 
 type Props = {
+    restaurant?: Restaurant;
     onSave: (restaurantFormData: FormData) => void;
     isLoading: boolean
 };
 
-const ManageRestaurantForm = ({onSave, isLoading}: Props) => {
+const ManageRestaurantForm = ({restaurant, onSave, isLoading}: Props) => {
 
     const form = useForm<RestaurantFormData>({ 
         resolver: zodResolver(RestaurantSchema),

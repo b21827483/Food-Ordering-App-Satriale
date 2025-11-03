@@ -36,12 +36,13 @@ const createCurrentUser = async (req: Request, res: Response) => {
 
 const updateCurrentUser = async (req: Request, res: Response) => {
     try {
-        const { name, address, country, city } = req.body;
         const user = await User.findById(req.userId);
 
         if(!user) {
             return res.status(404).json({message: "User not found."});
         }
+
+        const { name, address, country, city } = req.body;
 
         user.name = name;
         user.addess = address;

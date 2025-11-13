@@ -20,7 +20,12 @@ const DetailPage = () => {
             <div className="grid md:grid-cols-[4fr_2fr] gap-5 md:px-32">
                 <div className="flex flex-col gap-4">
                     <RestaurantInfo restaurant={restaurant} />
-
+                    <span className="text-2xl font-bold tracking-tight">
+                        Menu
+                    </span>
+                    {restaurant.menuItems.map((menuItem) => (
+                        <MenuItem menuItem={menuItem} />
+                    ))}
                 </div>
             </div>
         </div>

@@ -1,16 +1,17 @@
 import type { CartItem } from "@/pages/DetailPage";
 import type { Restaurant } from "@/types";
 import { CardContent, CardHeader, CardTitle } from "./ui/card";
-import { Car } from "lucide-react";
+import { Car, Trash } from "lucide-react";
 import { Badge } from "./ui/badge";
 import { Separator } from "./ui/separator";
 
 type Props = {
     restaurant: Restaurant;
     cartItems: CartItem[];
+    removeFromCart: (cartItem: CartItem) => void;
 };
 
-const OrderSummary = ({ restaurant, cartItems }: Props) => {
+const OrderSummary = ({ restaurant, cartItems, removeFromCart }: Props) => {
 
     const getTotalCost = () => {
         const total = cartItems.reduce((total, cartItem) => total + cartItem.price * cartItem.quantity, 0);
@@ -37,6 +38,7 @@ const OrderSummary = ({ restaurant, cartItems }: Props) => {
                             {cartItem.name}
                         </span>
                         <span className="flex items-center gap-1">
+                            <Trash className="cursor-pointer" color="red" size={20} onClick={() => removeFromCart(cartItem)}/>
                             {((cartItem.price * cartItem.quantity) / 100).toFixed(2)}₺
                         </span>
                     </div>

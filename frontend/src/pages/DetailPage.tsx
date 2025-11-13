@@ -4,6 +4,7 @@ import MenuItemComp from "@/components/MenuItemComp";
 import OrderSummary from "@/components/OrderSummary";
 import RestaurantInfo from "@/components/RestaurantInfo";
 import { Card, CardFooter } from "@/components/ui/card";
+import type { UserFormData } from "@/forms/user-profile-form/UserProfileForm";
 import type { MenuItem } from "@/types";
 import { AspectRatio } from "@radix-ui/react-aspect-ratio";
 import { useState } from "react";
@@ -25,6 +26,10 @@ const DetailPage = () => {
         const storedCartItems = sessionStorage.getItem(`cartItems-${restaurantId}`);
         return storedCartItems ? JSON.parse(storedCartItems) : [];
     }); 
+
+    const onCheckout = (userFormData: UserFormData) => {
+        console.log(userFormData);
+    };
 
     if (isLoading || !restaurant) {
         return "Loading..."
@@ -87,7 +92,7 @@ const DetailPage = () => {
                            cartItems={cartItems}
                            removeFromCart={removeFromCart} />
                         <CardFooter>
-                            <CheckoutButton />
+                            <CheckoutButton disabled={cartItems.length === 0} onCheckout={onCheckout} />
                         </CardFooter>
                     </Card>
                 </div>

@@ -1,7 +1,8 @@
 import { cuisineList } from "@/config/restaurant-options-config";
 import { Label } from "./ui/label";
-import { Check } from "lucide-react";
+import { Check, ChevronDown, ChevronUp } from "lucide-react";
 import type { ChangeEvent } from "react";
+import { Button } from "./ui/button";
 
 type Props = {
     onChange: (cuisines: string[]) => void;
@@ -36,7 +37,9 @@ const CuisineFilter = ({ onChange, selectedCuisines, isExpanded, onExpandedClick
                 </div>
             </div>
             <div className="space-y-2 flex flex-col">
-                {cuisineList.map((cuisine) => {
+                {cuisineList
+                  .slice(0, isExpanded ? cuisineList.length : 7)
+                  .map((cuisine) => {
                     const isSelected = selectedCuisines.includes(cuisine);
                     return <div className="flex">
                         <input 
@@ -57,6 +60,18 @@ const CuisineFilter = ({ onChange, selectedCuisines, isExpanded, onExpandedClick
                         </Label>
                     </div>
                 })}
+
+                <Button onClick={onExpandedClick} variant="link" className="mt-4 flex-1">
+                    {isExpanded ? (
+                      <span className="flex flex-row items-center">
+                        View Less <ChevronUp />
+                      </span>
+                    ) : (
+                    <span className="flex flex-row items-center">
+                        View More <ChevronDown />
+                    </span>
+                    )}
+                </Button>
             </div>
         </>
     )

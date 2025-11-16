@@ -1,3 +1,4 @@
+import { useCreateCheckoutSession } from "@/api/OrderApi";
 import { useGetRestaurant } from "@/api/RestaurantApi";
 import CheckoutButton from "@/components/CheckoutButton";
 import MenuItemComp from "@/components/MenuItemComp";
@@ -21,14 +22,37 @@ const DetailPage = () => {
 
     const { restaurantId } = useParams();
     const { restaurant, isLoading } = useGetRestaurant();
+    const { createCheckoutSession, isPending: isCheckoutLoading } = useCreateCheckoutSession();
 
     const [cartItems, setCartItems] = useState<CartItem[]>(() => {
         const storedCartItems = sessionStorage.getItem(`cartItems-${restaurantId}`);
         return storedCartItems ? JSON.parse(storedCartItems) : [];
     }); 
 
-    const onCheckout = (userFormData: UserFormData) => {
-        console.log(userFormData);
+    const onCheckout = async (userFormData: UserFormData) => {
+        if (!restaurant) {
+            return;
+        }
+
+        const checkoutData = {
+            cartItems: cartItems.map((cartItem) => ({
+                menuItemId: cartItem._id,
+                name: cartItem.name,
+                quantity: cartItem.quantity.toString(),
+            })),
+            restaurantId: restaurant._id,
+            deliveryDetails: {
+                name: userFormData.name,
+                email: userFormData.email as string,
+                address: userFormData.address,
+                city: userFormData.city,
+                country: userFormData.country
+            }
+        };
+
+        const data = await createCheckoutSession(checkoutData);
+
+        window.location.href = data.url;
     };
 
     if (isLoading || !restaurant) {
@@ -92,7 +116,10 @@ const DetailPage = () => {
                            cartItems={cartItems}
                            removeFromCart={removeFromCart} />
                         <CardFooter>
-                            <CheckoutButton disabled={cartItems.length === 0} onCheckout={onCheckout} />
+                            <CheckoutButton 
+                              disabled={cartItems.length === 0} 
+                              onCheckout={onCheckout}
+                              isLoading={isCheckoutLoading} />
                         </CardFooter>
                     </Card>
                 </div>

@@ -1,8 +1,33 @@
+import type { Order } from "@/types";
 import { useAuth0 } from "@auth0/auth0-react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+export const useGetMyOrders = () => {
+    const { getAccessTokenSilently } = useAuth0();
+    
+    const getMyOrdersRequest = async (): Promise<Order[]> => {
+        const accessToken = getAccessTokenSilently();
+        
+        const res = await fetch(`${API_BASE_URL}/api/order`, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`
+            }
+        });
+
+        if (!res.ok) {
+            throw new Error("Failed to get orders");
+        }
+
+        return res.json();
+    };
+
+    const { data: orders, isLoading } = useQuery({queryKey: ["fetchMyOrders"], queryFn: getMyOrdersRequest});
+
+    return {orders, isLoading};
+};
 
 type CheckoutSessionRequest = {
     cartItems: {

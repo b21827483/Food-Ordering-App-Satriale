@@ -12,7 +12,7 @@ const OrderStatusPage = () => {
 
     if(!orders || orders.length === 0) {
         return "No orders found";
-    }
+}
 
     return (
         <div className="space-y-10">

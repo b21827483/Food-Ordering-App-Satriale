@@ -24,7 +24,7 @@ export const useGetMyOrders = () => {
         return res.json();
     };
 
-    const { data: orders, isLoading } = useQuery({queryKey: ["fetchMyOrders"], queryFn: getMyOrdersRequest});
+    const { data: orders, isLoading } = useQuery({queryKey: ["fetchMyOrders"], queryFn: getMyOrdersRequest, refetchInterval: 5000});
 
     return {orders, isLoading};
 };
